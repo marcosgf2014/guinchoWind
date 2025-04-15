@@ -14,11 +14,12 @@ $clientes = $conn->query('SELECT * FROM clientes ORDER BY nome');
 <div class="container mt-4">
     <h2>Clientes <a href="cliente_form.php" class="btn btn-primary btn-sm">Novo Cliente</a></h2>
     <table class="table table-bordered table-striped">
-        <thead><tr><th>Nome</th><th>Telefone</th><th>Email</th><th>Endereço</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Telefone</th><th>Email</th><th>Endereço</th><th>Ações</th></tr></thead>
         <tbody>
         <?php while($c = $clientes->fetch_assoc()): ?>
         <tr>
             <td><?= htmlspecialchars($c['nome']) ?></td>
+            <td><?= htmlspecialchars($c['cpf_cnpj']) ?></td>
             <td><?= htmlspecialchars($c['telefone']) ?></td>
             <td><?= htmlspecialchars($c['email']) ?></td>
             <td><?= htmlspecialchars($c['endereco']) ?></td>

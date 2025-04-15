@@ -7,7 +7,9 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $clientes = $conn->query('SELECT id, nome FROM clientes ORDER BY nome');
 
 // Se for edição, busca dados do veículo
-$veiculo = ['cliente_id'=>'','placa'=>'','modelo'=>'','cor'=>'','ano'=>''];
+$veiculo = [
+    'cliente_id'=>'','placa'=>'','marca'=>'','modelo'=>'','ano'=>'','cor'=>'','status'=>'','valor_servico'=>'','data_entrada'=>'','data_saida'=>'','origem'=>'','destino'=>''
+];
 if ($id) {
     $stmt = $conn->prepare('SELECT * FROM veiculos WHERE id=?');
     $stmt->bind_param('i', $id);
@@ -27,8 +29,9 @@ if ($id) {
 <div class="container mt-4">
     <h2><?= $id ? 'Editar' : 'Novo' ?> Veículo</h2>
     <form method="post" action="veiculo_save.php">
-        <input type="hidden" name="id" value="<?= $id ?>">
-        <div class="mb-3">
+    <input type="hidden" name="id" value="<?= $id ?>">
+    <div class="row g-2">
+        <div class="col-md-6 mb-2">
             <label>Cliente</label>
             <select name="cliente_id" class="form-control" required>
                 <option value="">Selecione...</option>
@@ -37,25 +40,71 @@ if ($id) {
                 <?php endwhile; ?>
             </select>
         </div>
-        <div class="mb-3">
+        <div class="col-md-3 mb-2">
             <label>Placa</label>
             <input type="text" name="placa" class="form-control" value="<?= htmlspecialchars($veiculo['placa']) ?>" required>
         </div>
-        <div class="mb-3">
+        <div class="col-md-3 mb-2">
+            <label>Marca</label>
+            <input type="text" name="marca" class="form-control" value="<?= htmlspecialchars($veiculo['marca']) ?>">
+        </div>
+        <div class="col-md-4 mb-2">
             <label>Modelo</label>
             <input type="text" name="modelo" class="form-control" value="<?= htmlspecialchars($veiculo['modelo']) ?>">
         </div>
-        <div class="mb-3">
-            <label>Cor</label>
-            <input type="text" name="cor" class="form-control" value="<?= htmlspecialchars($veiculo['cor']) ?>">
-        </div>
-        <div class="mb-3">
+        <div class="col-md-2 mb-2">
             <label>Ano</label>
             <input type="number" name="ano" class="form-control" value="<?= htmlspecialchars($veiculo['ano']) ?>">
         </div>
+        <div class="col-md-2 mb-2">
+            <label>Cor</label>
+            <input type="text" name="cor" class="form-control" value="<?= htmlspecialchars($veiculo['cor']) ?>">
+        </div>
+        <div class="col-md-4 mb-2">
+    <label>Status</label>
+    <select name="status" class="form-control" required>
+        <option value="">Selecione...</option>
+        <option value="Em Andamento" <?= $veiculo['status']==='Em Andamento' ? 'selected' : '' ?>>Em Andamento</option>
+        <option value="No Pátio" <?= $veiculo['status']==='No Pátio' ? 'selected' : '' ?>>No Pátio</option>
+        <option value="Entregue" <?= $veiculo['status']==='Entregue' ? 'selected' : '' ?>>Entregue</option>
+    </select>
+</div>
+        <div class="col-md-4 mb-2">
+            <label>Valor do Serviço</label>
+            <input type="number" step="0.01" name="valor_servico" class="form-control" value="<?= htmlspecialchars($veiculo['valor_servico']) ?>">
+        </div>
+        <div class="col-md-4 mb-2">
+            <label>Data de Entrada e Hora</label>
+            <?php
+    $dtEntrada = '';
+    if ($veiculo['data_entrada']) {
+        $dtEntrada = date('Y-m-d\TH:i', strtotime($veiculo['data_entrada']));
+    } else {
+        $tz = new DateTimeZone('America/Sao_Paulo');
+        $agora = new DateTime('now', $tz);
+        $dtEntrada = $agora->format('Y-m-d\TH:i');
+    }
+?>
+<input type="datetime-local" name="data_entrada" class="form-control" value="<?= $dtEntrada ?>">
+        </div>
+        <div class="col-md-4 mb-2">
+            <label>Data de Saída e Hora</label>
+            <input type="datetime-local" name="data_saida" class="form-control" value="<?= $veiculo['data_saida'] ? date('Y-m-d\TH:i', strtotime($veiculo['data_saida'])) : '' ?>">
+        </div>
+        <div class="col-md-4 mb-2">
+            <label>Origem</label>
+            <input type="text" name="origem" class="form-control" value="<?= htmlspecialchars($veiculo['origem']) ?>">
+        </div>
+        <div class="col-md-4 mb-2">
+            <label>Destino</label>
+            <input type="text" name="destino" class="form-control" value="<?= htmlspecialchars($veiculo['destino']) ?>">
+        </div>
+    </div>
+    <div class="mt-3">
         <button type="submit" class="btn btn-success">Salvar</button>
         <a href="veiculos.php" class="btn btn-secondary">Cancelar</a>
-    </form>
+    </div>
+</form>
 </div>
 </body>
 </html>

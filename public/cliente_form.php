@@ -2,7 +2,7 @@
 require_once '../includes/db.php';
 $conn = getDbConnection();
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$cliente = ['nome'=>'','telefone'=>'','email'=>'','endereco'=>''];
+$cliente = ['nome'=>'','cpf_cnpj'=>'','telefone'=>'','email'=>'','endereco'=>''];
 if ($id) {
     $stmt = $conn->prepare('SELECT * FROM clientes WHERE id=?');
     $stmt->bind_param('i', $id);
@@ -26,6 +26,10 @@ if ($id) {
         <div class="mb-3">
             <label>Nome</label>
             <input type="text" name="nome" class="form-control" value="<?= htmlspecialchars($cliente['nome']) ?>" required>
+        </div>
+        <div class="mb-3">
+            <label>CPF ou CNPJ</label>
+            <input type="text" name="cpf_cnpj" class="form-control" value="<?= htmlspecialchars($cliente['cpf_cnpj']) ?>" maxlength="20" placeholder="Somente números">
         </div>
         <div class="mb-3">
             <label>Telefone</label>
