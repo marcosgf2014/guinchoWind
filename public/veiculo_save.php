@@ -16,7 +16,7 @@ $origem = trim($_POST['origem']);
 $destino = trim($_POST['destino']);
 if ($id) {
     $stmt = $conn->prepare('UPDATE veiculos SET cliente_id=?, placa=?, marca=?, modelo=?, ano=?, cor=?, status=?, valor_servico=?, data_entrada=?, data_saida=?, origem=?, destino=? WHERE id=?');
-    $stmt->bind_param('isssissdsssssi', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino, $id);
+    $stmt->bind_param('isssissdssssi', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino, $id);
     $stmt->execute();
 } else {
     $stmt = $conn->prepare('INSERT INTO veiculos (cliente_id, placa, marca, modelo, ano, cor, status, valor_servico, data_entrada, data_saida, origem, destino) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
