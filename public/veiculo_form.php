@@ -4,7 +4,14 @@ $conn = getDbConnection();
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Buscar clientes para o dropdown
-$clientes = $conn->query('SELECT id, nome FROM clientes ORDER BY nome');
+$clientes = $conn->query('SELECT id, nome, endereco FROM clientes ORDER BY nome');
+// Array de endereços para uso no JS
+$clientes_enderecos = [];
+$clientes->data_seek(0);
+while($c = $clientes->fetch_assoc()) {
+    $clientes_enderecos[$c['id']] = $c['endereco'];
+}
+$clientes->data_seek(0); // Volta para o início para o while do HTML
 
 // Se for edição, busca dados do veículo
 $veiculo = [
@@ -33,7 +40,7 @@ if ($id) {
     <div class="row g-2">
         <div class="col-md-6 mb-2">
             <label>Cliente</label>
-            <select name="cliente_id" class="form-control" required>
+            <select name="cliente_id" id="cliente_id" class="form-control" required>
                 <option value="">Selecione...</option>
                 <?php while($c = $clientes->fetch_assoc()): ?>
                 <option value="<?= $c['id'] ?>" <?= $c['id']==$veiculo['cliente_id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['nome']) ?></option>
@@ -97,7 +104,11 @@ if ($id) {
         </div>
         <div class="col-md-4 mb-2">
             <label>Destino</label>
-            <input type="text" name="destino" class="form-control" value="<?= htmlspecialchars($veiculo['destino']) ?>">
+            <input type="text" name="destino" id="destino" class="form-control" value="<?= htmlspecialchars($veiculo['destino']) ?>">
+        </div>
+        <div class="col-md-12 mb-2">
+            <label>Obs:</label>
+            <textarea name="obs" class="form-control" rows="2"><?= htmlspecialchars($veiculo['obs'] ?? '') ?></textarea>
         </div>
     </div>
     <div class="mt-3">
@@ -106,5 +117,24 @@ if ($id) {
     </div>
 </form>
 </div>
+<script>
+// Array de endereços dos clientes do PHP para JS
+const clientesEnderecos = <?php echo json_encode($clientes_enderecos, JSON_UNESCAPED_UNICODE); ?>;
+
+// Preencher destino ao selecionar cliente
+const clienteSelect = document.getElementById('cliente_id');
+const destinoInput = document.getElementById('destino');
+if (clienteSelect && destinoInput) {
+    clienteSelect.addEventListener('change', function() {
+        const id = this.value;
+        destinoInput.value = clientesEnderecos[id] || '';
+    });
+    // Se for novo cadastro, já preenche destino se cliente estiver selecionado
+    if (!<?= $id ? 'true' : 'false' ?>) {
+        const id = clienteSelect.value;
+        if (id && clientesEnderecos[id]) destinoInput.value = clientesEnderecos[id];
+    }
+}
+</script>
 </body>
 </html>

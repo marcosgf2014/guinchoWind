@@ -14,13 +14,14 @@ $data_entrada = $_POST['data_entrada'] ? date('Y-m-d H:i:s', strtotime($_POST['d
 $data_saida = $_POST['data_saida'] ? date('Y-m-d H:i:s', strtotime($_POST['data_saida'])) : null;
 $origem = trim($_POST['origem']);
 $destino = trim($_POST['destino']);
+$obs = trim($_POST['obs'] ?? '');
 if ($id) {
-    $stmt = $conn->prepare('UPDATE veiculos SET cliente_id=?, placa=?, marca=?, modelo=?, ano=?, cor=?, status=?, valor_servico=?, data_entrada=?, data_saida=?, origem=?, destino=? WHERE id=?');
-    $stmt->bind_param('isssissdssssi', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino, $id);
+    $stmt = $conn->prepare('UPDATE veiculos SET cliente_id=?, placa=?, marca=?, modelo=?, ano=?, cor=?, status=?, valor_servico=?, data_entrada=?, data_saida=?, origem=?, destino=?, obs=? WHERE id=?');
+    $stmt->bind_param('isssissdsssssi', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino, $obs, $id);
     $stmt->execute();
 } else {
-    $stmt = $conn->prepare('INSERT INTO veiculos (cliente_id, placa, marca, modelo, ano, cor, status, valor_servico, data_entrada, data_saida, origem, destino) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    $stmt->bind_param('isssissdssss', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino);
+    $stmt = $conn->prepare('INSERT INTO veiculos (cliente_id, placa, marca, modelo, ano, cor, status, valor_servico, data_entrada, data_saida, origem, destino, obs) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt->bind_param('isssissdsssss', $cliente_id, $placa, $marca, $modelo, $ano, $cor, $status, $valor_servico, $data_entrada, $data_saida, $origem, $destino, $obs);
     $stmt->execute();
 }
 header('Location: veiculos.php');

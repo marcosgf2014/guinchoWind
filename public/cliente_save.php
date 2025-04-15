@@ -12,7 +12,7 @@ if ($id) {
     $stmt->bind_param('sssssi', $nome, $cpf_cnpj, $telefone, $email, $endereco, $id);
     $stmt->execute();
 } else {
-    $stmt = $conn->prepare('INSERT INTO clientes (nome, cpf_cnpj, telefone, email, endereco) VALUES (?, ?, ?, ?, ?, ?)');
+    $stmt = $conn->prepare('INSERT INTO clientes (nome, cpf_cnpj, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)');
     $stmt->bind_param('sssss', $nome, $cpf_cnpj, $telefone, $email, $endereco);
     $stmt->execute();
 }
