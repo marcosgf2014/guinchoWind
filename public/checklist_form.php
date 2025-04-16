@@ -28,6 +28,44 @@ if (isset($_GET['id']) && intval($_GET['id'])) {
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<style>
+/* Select customizado */
+.form-select {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    color: #222;
+}
+.form-select option[value="Novo"] { background-color: #e6f4ea; }
+.form-select option[value="Bons"] { background-color: #fff7e0; }
+.form-select option[value="Ruins"] { background-color: #ffeaea; }
+
+/* Slider customizado */
+input[type="range"].form-range {
+    accent-color: #ff8000;
+}
+input[type="range"].form-range::-webkit-slider-thumb {
+    background: #ff8000;
+}
+input[type="range"].form-range::-moz-range-thumb {
+    background: #ff8000;
+}
+input[type="range"].form-range::-ms-thumb {
+    background: #ff8000;
+}
+
+/* Switch customizado */
+.form-switch .form-check-input:checked {
+    background-color: #22c55e;
+    border-color: #22c55e;
+}
+.form-switch .form-check-input {
+    background-color: #e5e7eb;
+    border-color: #e5e7eb;
+}
+.form-switch .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(34,197,94,.25);
+}
+</style>
     <meta charset="UTF-8">
     <title>Novo Checklist de Veículo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -112,41 +150,111 @@ if (isset($_GET['id']) && intval($_GET['id'])) {
             </div>
             <!-- Aba Detalhes -->
             <div class="tab-pane fade" id="detalhes">
-                <?php 
-                $itens = [
-                    'Parte Externa' => [
-                        'Para-choque Dianteiro', 'Para-choque Traseiro',
-                        'Farol Dianteiro Esquerdo', 'Farol Dianteiro Direito',
-                        'Lanterna Traseira Esquerda', 'Lanterna Traseira Direita',
-                        'Retrovisores', 'Vidros', 'Limpadores'
-                    ],
-                    'Rodas e Pneus' => [
-                        'Rodas', 'Pneus', 'Pneu Estepe'
-                    ],
-                    'Acessórios e Ferramentas' => [
-                        'Chave de Rodas', 'Macaco'
-                    ]
-                ];
-                foreach ($itens as $grupo => $lista): ?>
-                <div class="mb-3">
-                    <h6><?= $grupo ?></h6>
-                    <div class="row">
-                        <?php foreach ($lista as $item): ?>
-                        <div class="col-md-4 mb-2">
-                            <label><?= $item ?></label>
-                            <div class="btn-group check-btn-group w-100" role="group">
-                                <input type="radio" class="btn-check" name="item_<?= md5($item) ?>" id="<?= md5($item) ?>_ok" value="Ok" autocomplete="off" <?= ($edit && (isset($itens['item_'.md5($item)]) && $itens['item_'.md5($item)]=='Ok') ? 'checked' : '') ?>>
-<label class="btn btn-outline-success" for="<?= md5($item) ?>_ok">Ok</label>
-<input type="radio" class="btn-check" name="item_<?= md5($item) ?>" id="<?= md5($item) ?>_danificado" value="Danificado" autocomplete="off" <?= ($edit && (isset($itens['item_'.md5($item)]) && $itens['item_'.md5($item)]=='Danificado') ? 'checked' : '') ?>>
-<label class="btn btn-outline-danger" for="<?= md5($item) ?>_danificado">Danificado</label>
-<input type="radio" class="btn-check" name="item_<?= md5($item) ?>" id="<?= md5($item) ?>_ausente" value="Ausente" autocomplete="off" <?= ($edit && (isset($itens['item_'.md5($item)]) && $itens['item_'.md5($item)]=='Ausente') ? 'checked' : '') ?>>
-<label class="btn btn-outline-warning" for="<?= md5($item) ?>_ausente">Ausente</label>
+                <div class="row">
+                    <!-- Rodas e Pneus -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-circle"></i> Rodas e Pneus</h5>
+                                <div class="mb-2 row align-items-center">
+                                    <label class="col-7">Pneus Dianteiros</label>
+                                    <div class="col-5">
+                                        <select name="item_pneus_dianteiros" class="form-select">
+                                            <option value="Novo">Novo</option>
+                                            <option value="Bons">Bons</option>
+                                            <option value="Ruins">Ruins</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row align-items-center">
+                                    <label class="col-7">Pneus Traseiros</label>
+                                    <div class="col-5">
+                                        <select name="item_pneus_traseiros" class="form-select">
+                                            <option value="Novo">Novo</option>
+                                            <option value="Bons">Bons</option>
+                                            <option value="Ruins">Ruins</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row align-items-center">
+                                    <label class="col-7">Rodas Dianteiras</label>
+                                    <div class="col-5">
+                                        <select name="item_rodas_dianteiras" class="form-select">
+                                            <option value="Novo">Novo</option>
+                                            <option value="Bons">Bons</option>
+                                            <option value="Ruins">Ruins</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row align-items-center">
+                                    <label class="col-7">Rodas Traseiras</label>
+                                    <div class="col-5">
+                                        <select name="item_rodas_traseiras" class="form-select">
+                                            <option value="Novo">Novo</option>
+                                            <option value="Bons">Bons</option>
+                                            <option value="Ruins">Ruins</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <?php endforeach; ?>
+                    </div>
+                    <!-- Acessórios -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-tools"></i> Acessórios</h5>
+                                <?php $acessorios = [
+                                    'Calotas', 'Retrovisores', 'Palhetas', 'Triângulo', 'Macaco / Chave Roda', 'Estepe'
+                                ];
+                                foreach ($acessorios as $acc): ?>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" name="item_<?= strtolower(str_replace([' ', '/', 'ã', 'é'], ['_', '', 'a', 'e'], $acc)) ?>" id="item_<?= strtolower(str_replace([' ', '/', 'ã', 'é'], ['_', '', 'a', 'e'], $acc)) ?>" checked>
+                                    <label class="form-check-label" for="item_<?= strtolower(str_replace([' ', '/', 'ã', 'é'], ['_', '', 'a', 'e'], $acc)) ?>"><?= $acc ?></label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
+                <div class="row">
+                    <!-- Interior -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-house"></i> Interior</h5>
+                                <?php $interior = [
+                                    'Bancos'=>false, 'Painel'=>true, 'Consoles'=>false, 'Forração'=>true, 'Tapetes'=>true
+                                ];
+                                foreach ($interior as $item=>$checked): ?>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" name="item_<?= strtolower($item) ?>" id="item_<?= strtolower($item) ?>" <?= $checked?'checked':'' ?>>
+                                    <label class="form-check-label" for="item_<?= strtolower($item) ?>"><?= $item ?></label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Outros -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-box"></i> Outros</h5>
+                                <?php $outros = [
+                                    'Bateria'=>true, 'Chaves'=>true, 'Documentos'=>true, 'Som'=>true, 'Caixa Selada'=>false
+                                ];
+                                foreach ($outros as $item=>$checked): ?>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" name="item_<?= strtolower(str_replace(' ', '_', $item)) ?>" id="item_<?= strtolower(str_replace(' ', '_', $item)) ?>" <?= $checked?'checked':'' ?>>
+                                    <label class="form-check-label" for="item_<?= strtolower(str_replace(' ', '_', $item)) ?>"><?= $item ?></label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <!-- Aba Fotos -->
             <div class="tab-pane fade" id="fotos">
